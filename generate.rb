@@ -25,3 +25,8 @@ puts command3
 command4 = "chmod +x #{output_folder}/gradlew"
 puts command4
 `#{command4}`
+
+# 5. 调整构建脚本
+command5 = "cp -f build.gradle #{output_folder}/"
+puts command5
+`#{command5}`
