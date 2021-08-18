@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "The Selling Partner API for Feeds lets you upload data to Amazon on behalf of a selling partner.",
-    "version": "2020-09-04",
+    "version": "2021-06-30",
     "title": "Selling Partner API for Feeds",
     "contact": {
       "name": "Selling Partner API Developer Support",
@@ -24,7 +24,7 @@
     "application/json"
   ],
   "paths": {
-    "/feeds/2020-09-04/feeds": {
+    "/feeds/2021-06-30/feeds": {
       "get": {
         "tags": [
           "feeds"
@@ -35,26 +35,26 @@
           {
             "name": "feedTypes",
             "in": "query",
-            "description": "A list of feed types used to filter feeds. When feedTypes is provided, the other filter parameters (processingStatuses, marketplaceIds, createdSince, createdUntil) and pageSize may also be provided. Either feedTypes or nextToken is required.",
             "required": false,
             "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "description": "A list of feed types used to filter feeds. When feedTypes is provided, the other filter parameters (processingStatuses, marketplaceIds, createdSince, createdUntil) and pageSize may also be provided. Either feedTypes or nextToken is required.",
             "items": {
               "type": "string"
-            },
-            "maxItems": 10,
-            "minItems": 1
+            }
           },
           {
             "name": "marketplaceIds",
-            "in": "query",
             "description": "A list of marketplace identifiers used to filter feeds. The feeds returned will match at least one of the marketplaces that you specify.",
+            "in": "query",
             "required": false,
             "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
             "items": {
               "type": "string"
-            },
-            "maxItems": 10,
-            "minItems": 1
+            }
           },
           {
             "name": "pageSize",
@@ -62,9 +62,9 @@
             "description": "The maximum number of feeds to return in a single call.",
             "required": false,
             "type": "integer",
-            "default": 10,
+            "minimum": 1,
             "maximum": 100,
-            "minimum": 1
+            "default": 10
           },
           {
             "name": "processingStatuses",
@@ -72,6 +72,7 @@
             "description": "A list of processing statuses used to filter feeds.",
             "required": false,
             "type": "array",
+            "minItems": 1,
             "items": {
               "type": "string",
               "enum": [
@@ -92,7 +93,7 @@
                 },
                 {
                   "value": "FATAL",
-                  "description": "The feed was aborted due to a fatal error. Some, none or all of the operations within the feed may have completed successfully."
+                  "description": "The feed was aborted due to a fatal error. Some, none, or all of the operations within the feed may have completed successfully."
                 },
                 {
                   "value": "IN_PROGRESS",
@@ -103,8 +104,7 @@
                   "description": "The feed has not yet started processing. It may be waiting for another IN_PROGRESS feed."
                 }
               ]
-            },
-            "minItems": 1
+            }
           },
           {
             "name": "createdSince",
@@ -138,8 +138,8 @@
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -167,7 +167,7 @@
                   }
                 },
                 "response": {
-                  "payload": [
+                  "feeds": [
                     {
                       "feedId": "FeedId1",
                       "feedType": "POST_PRODUCT_DATA",
@@ -185,12 +185,12 @@
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -229,12 +229,12 @@
           "401": {
             "description": "The request's Authorization header is not formatted correctly or does not contain a valid token.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -245,7 +245,7 @@
           "403": {
             "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RequestId": {
@@ -257,12 +257,12 @@
           "404": {
             "description": "The specified resource does not exist.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -273,12 +273,12 @@
           "415": {
             "description": "The request's Content-Type header is invalid.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -289,12 +289,12 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -305,12 +305,12 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -321,12 +321,12 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "schema": {
-              "$ref": "#/definitions/GetFeedsResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -340,7 +340,7 @@
         "tags": [
           "feeds"
         ],
-        "description": "Creates a feed. Encrypt and upload the contents of the feed document before calling this operation.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 0.0083 | 15 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Creates a feed. Upload the contents of the feed document before calling this operation.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 0.0083 | 15 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createFeed",
         "parameters": [
           {
@@ -360,8 +360,8 @@
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -385,9 +385,7 @@
                   }
                 },
                 "response": {
-                  "payload": {
-                    "feedId": "3485934"
-                  }
+                  "feedId": "3485934"
                 }
               }
             ]
@@ -395,12 +393,12 @@
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -437,12 +435,12 @@
           "401": {
             "description": "The request's Authorization header is not formatted correctly or does not contain a valid token.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -453,7 +451,7 @@
           "403": {
             "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RequestId": {
@@ -465,12 +463,12 @@
           "404": {
             "description": "The specified resource does not exist.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -481,12 +479,12 @@
           "415": {
             "description": "The request's Content-Type header is invalid.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -497,12 +495,12 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -513,12 +511,12 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -529,213 +527,12 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "schema": {
-              "$ref": "#/definitions/CreateFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            }
-          }
-        }
-      }
-    },
-    "/feeds/2020-09-04/feeds/{feedId}": {
-      "get": {
-        "tags": [
-          "feeds"
-        ],
-        "description": "Returns feed details (including the resultDocumentId, if available) for the feed that you specify.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 2.0 | 15 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
-        "operationId": "getFeed",
-        "parameters": [
-          {
-            "name": "feedId",
-            "in": "path",
-            "description": "The identifier for the feed. This identifier is unique only in combination with a seller ID.",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            },
-            "x-amazon-spds-sandbox-behaviors": [
-              {
-                "request": {
-                  "parameters": {
-                    "feedId": {
-                      "value": "feedId1"
-                    }
-                  }
-                },
-                "response": {
-                  "payload": {
-                    "feedId": "FeedId1",
-                    "feedType": "POST_PRODUCT_DATA",
-                    "createdTime": "2019-12-11T13:16:24.630Z",
-                    "processingStatus": "CANCELLED",
-                    "processingStartTime": "2019-12-11T13:16:24.630Z",
-                    "processingEndTime": "2019-12-11T13:16:24.630Z"
-                  }
-                }
-              }
-            ]
-          },
-          "400": {
-            "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            },
-            "x-amazon-spds-sandbox-behaviors": [
-              {
-                "request": {
-                  "parameters": {
-                    "feedId": {
-                      "value": "badFeedId1"
-                    }
-                  }
-                },
-                "response": {
-                  "errors": [
-                    {
-                      "code": "400",
-                      "message": "Invalid input",
-                      "details": "Invalid input"
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          "401": {
-            "description": "The request's Authorization header is not formatted correctly or does not contain a valid token.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            }
-          },
-          "403": {
-            "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            }
-          },
-          "404": {
-            "description": "The specified resource does not exist.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            }
-          },
-          "415": {
-            "description": "The request's Content-Type header is invalid.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference identifier."
-              }
-            }
-          },
-          "429": {
-            "description": "The frequency of requests was greater than allowed.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            }
-          },
-          "500": {
-            "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
-              },
-              "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
-              }
-            }
-          },
-          "503": {
-            "description": "Temporary overloading or maintenance of the server.",
-            "schema": {
-              "$ref": "#/definitions/GetFeedResponse"
-            },
-            "headers": {
-              "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -745,6 +542,9 @@
           }
         }
       },
+      "parameters": []
+    },
+    "/feeds/2021-06-30/feeds/{feedId}": {
       "delete": {
         "tags": [
           "feeds"
@@ -763,13 +563,10 @@
         "responses": {
           "200": {
             "description": "Success.",
-            "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -784,20 +581,19 @@
                       "value": "ID1"
                     }
                   }
-                },
-                "response": {}
+                }
               }
             ]
           },
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -828,12 +624,12 @@
           "401": {
             "description": "The request's Authorization header is not formatted correctly or does not contain a valid token.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -844,7 +640,7 @@
           "403": {
             "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RequestId": {
@@ -856,12 +652,12 @@
           "404": {
             "description": "The specified resource does not exist.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -872,12 +668,12 @@
           "415": {
             "description": "The request's Content-Type header is invalid.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -888,12 +684,12 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -904,12 +700,12 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -920,12 +716,12 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "schema": {
-              "$ref": "#/definitions/CancelFeedResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -934,15 +730,213 @@
             }
           }
         }
-      }
-    },
-    "/feeds/2020-09-04/documents": {
-      "post": {
+      },
+      "get": {
         "tags": [
           "feeds"
         ],
-        "description": "Creates a feed document for the feed type that you specify. This operation returns encryption details for encrypting the contents of the document, as well as a presigned URL for uploading the encrypted feed document contents. It also returns a feedDocumentId value that you can pass in with a subsequent call to the createFeed operation.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 0.0083 | 15 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Returns feed details (including the resultDocumentId, if available) for the feed that you specify.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 2.0 | 15 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "operationId": "getFeed",
+        "parameters": [
+          {
+            "name": "feedId",
+            "in": "path",
+            "description": "The identifier for the feed. This identifier is unique only in combination with a seller ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "feedId": {
+                      "value": "feedId1"
+                    }
+                  }
+                },
+                "response": {
+                  "feedId": "FeedId1",
+                  "feedType": "POST_PRODUCT_DATA",
+                  "createdTime": "2019-12-11T13:16:24.630Z",
+                  "processingStatus": "CANCELLED",
+                  "processingStartTime": "2019-12-11T13:16:24.630Z",
+                  "processingEndTime": "2019-12-11T13:16:24.630Z"
+                }
+              }
+            ]
+          },
+          "400": {
+            "description": "Request has missing or invalid parameters and cannot be parsed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            },
+            "x-amazon-spds-sandbox-behaviors": [
+              {
+                "request": {
+                  "parameters": {
+                    "feedId": {
+                      "value": "badFeedId1"
+                    }
+                  }
+                },
+                "response": {
+                  "errors": [
+                    {
+                      "code": "400",
+                      "message": "Invalid input",
+                      "details": "Invalid input"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "401": {
+            "description": "The request's Authorization header is not formatted correctly or does not contain a valid token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            }
+          },
+          "403": {
+            "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            }
+          },
+          "404": {
+            "description": "The specified resource does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            }
+          },
+          "415": {
+            "description": "The request's Content-Type header is invalid.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference identifier."
+              }
+            }
+          },
+          "429": {
+            "description": "The frequency of requests was greater than allowed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            }
+          },
+          "500": {
+            "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            }
+          },
+          "503": {
+            "description": "Temporary overloading or maintenance of the server.",
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
+            },
+            "headers": {
+              "x-amzn-RateLimit-Limit": {
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
+              },
+              "x-amzn-RequestId": {
+                "type": "string",
+                "description": "Unique request reference ID."
+              }
+            }
+          }
+        }
+      },
+      "parameters": []
+    },
+    "/feeds/2021-06-30/documents": {
+      "post": {
+        "description": "Creates a feed document for the feed type that you specify. This operation returns a presigned URL for uploading the feed document contents. It also returns a feedDocumentId value that you can pass in with a subsequent call to the createFeed operation.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 0.0083 | 15 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "createFeedDocument",
+        "tags": [
+          "feeds"
+        ],
         "parameters": [
           {
             "in": "body",
@@ -956,18 +950,18 @@
         "responses": {
           "201": {
             "description": "Successfully created a feed document that is ready to receive contents.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/CreateFeedDocumentResponse"
             },
             "x-amazon-spds-sandbox-behaviors": [
               {
@@ -981,33 +975,26 @@
                   }
                 },
                 "response": {
-                  "payload": {
-                    "feedDocumentId": "3d4e42b5-1d6e-44e8-a89c-2abfca0625bb",
-                    "url": "https://d34o8swod1owfl.cloudfront.net/Feed_101__POST_PRODUCT_DATA_%2BKEY%3DFeed_101%2BMode%3DCBC%2BINITVEC%3D8f+6c+cc+56+0d+50+a2+d0+31+ec+80+be+f2+6a+1d+0a",
-                    "encryptionDetails": {
-                      "standard": "AES",
-                      "initializationVector": "8f 6c cc 56 0d 50 a2 d0 31 ec 80 be f2 6a 1d 0a",
-                      "key": "key"
-                    }
-                  }
+                  "feedDocumentId": "3d4e42b5-1d6e-44e8-a89c-2abfca0625bb",
+                  "url": "https://d34o8swod1owfl.cloudfront.net/Feed_101__POST_PRODUCT_DATA_.xml"
                 }
               }
             ]
           },
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             },
             "x-amazon-spds-sandbox-behaviors": [
               {
@@ -1032,121 +1019,122 @@
           },
           "403": {
             "description": "Indicates that access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           },
           "404": {
             "description": "The resource specified does not exist.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           },
           "413": {
             "description": "The request size exceeded the maximum accepted size.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           },
           "415": {
             "description": "The request payload is in an unsupported format.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           },
           "429": {
             "description": "The frequency of requests was greater than allowed.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           },
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           },
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
-            "schema": {
-              "$ref": "#/definitions/CreateFeedDocumentResponse"
-            },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
-                "type": "string",
-                "description": "Unique request reference ID."
+                "description": "Unique request reference ID.",
+                "type": "string"
               }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorList"
             }
           }
         }
-      }
+      },
+      "parameters": []
     },
-    "/feeds/2020-09-04/documents/{feedDocumentId}": {
+    "/feeds/2021-06-30/documents/{feedDocumentId}": {
       "get": {
         "tags": [
           "feeds"
         ],
-        "description": "Returns the information required for retrieving a feed document's contents. This includes a presigned URL for the feed document as well as the information required to decrypt the document's contents.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 0.0222 | 10 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
+        "description": "Returns the information required for retrieving a feed document's contents.\n\n**Usage Plan:**\n\n| Rate (requests per second) | Burst |\n| ---- | ---- |\n| 0.0222 | 10 |\n\nFor more information, see \"Usage Plans and Rate Limits\" in the Selling Partner API documentation.",
         "operationId": "getFeedDocument",
         "parameters": [
           {
@@ -1161,12 +1149,12 @@
           "200": {
             "description": "Success.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/FeedDocument"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1183,15 +1171,8 @@
                   }
                 },
                 "response": {
-                  "payload": {
-                    "feedDocumentId": "0356cf79-b8b0-4226-b4b9-0ee058ea5760",
-                    "url": "https://d34o8swod1owfl.cloudfront.net/SampleResult%2BKey%3DSample%2BINITVEC%3D58+fa+bf+a7+08+11+95+0f+c1+a8+c6+e0+d5+6f+ae+c8",
-                    "encryptionDetails": {
-                      "standard": "AES",
-                      "initializationVector": "58 fa bf a7 08 11 95 0f c1 a8 c6 e0 d5 6f ae c8",
-                      "key": "Sample"
-                    }
-                  }
+                  "feedDocumentId": "0356cf79-b8b0-4226-b4b9-0ee058ea5760",
+                  "url": "https://d34o8swod1owfl.cloudfront.net/Feed_101__POST_PRODUCT_DATA_.xml"
                 }
               }
             ]
@@ -1199,12 +1180,12 @@
           "400": {
             "description": "Request has missing or invalid parameters and cannot be parsed.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1235,12 +1216,12 @@
           "401": {
             "description": "The request's Authorization header is not formatted correctly or does not contain a valid token.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1251,7 +1232,7 @@
           "403": {
             "description": "Indicates access to the resource is forbidden. Possible reasons include Access Denied, Unauthorized, Expired Token, or Invalid Signature.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RequestId": {
@@ -1263,12 +1244,12 @@
           "404": {
             "description": "The specified resource does not exist.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation."
+                "description": "Your rate limit (requests per second) for this operation.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1279,12 +1260,12 @@
           "415": {
             "description": "The request's Content-Type header is invalid.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1295,12 +1276,12 @@
           "429": {
             "description": "The frequency of requests was greater than allowed.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1311,12 +1292,12 @@
           "500": {
             "description": "An unexpected condition occurred that prevented the server from fulfilling the request.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1327,12 +1308,12 @@
           "503": {
             "description": "Temporary overloading or maintenance of the server.",
             "schema": {
-              "$ref": "#/definitions/GetFeedDocumentResponse"
+              "$ref": "#/definitions/ErrorList"
             },
             "headers": {
               "x-amzn-RateLimit-Limit": {
-                "type": "string",
-                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned."
+                "description": "Your rate limit (requests per second) for this operation.\n_Note:_ For this status code, the rate limit header is deprecated and no longer returned.",
+                "type": "string"
               },
               "x-amzn-RequestId": {
                 "type": "string",
@@ -1368,30 +1349,29 @@
       "description": "An error response returned when the request is unsuccessful."
     },
     "ErrorList": {
-      "type": "array",
-      "description": "A list of error responses returned when a request is unsuccessful.",
-      "items": {
-        "$ref": "#/definitions/Error"
-      }
-    },
-    "CancelFeedResponse": {
       "type": "object",
+      "description": "A list of error responses returned when a request is unsuccessful.",
+      "required": [
+        "errors"
+      ],
       "properties": {
         "errors": {
-          "$ref": "#/definitions/ErrorList"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
         }
-      },
-      "description": "Response schema."
+      }
     },
-    "CreateFeedResult": {
+    "CreateFeedResponse": {
       "type": "object",
       "required": [
         "feedId"
       ],
       "properties": {
         "feedId": {
-          "type": "string",
-          "description": "The identifier for the feed. This identifier is unique only in combination with a seller ID."
+          "description": "The identifier for the feed. This identifier is unique only in combination with a seller ID.",
+          "type": "string"
         }
       }
     },
@@ -1405,28 +1385,28 @@
       ],
       "properties": {
         "feedId": {
-          "type": "string",
-          "description": "The identifier for the feed. This identifier is unique only in combination with a seller ID."
+          "description": "The identifier for the feed. This identifier is unique only in combination with a seller ID.",
+          "type": "string"
         },
         "feedType": {
-          "type": "string",
-          "description": "The feed type."
+          "description": "The feed type.",
+          "type": "string"
         },
         "marketplaceIds": {
-          "type": "array",
           "description": "A list of identifiers for the marketplaces that the feed is applied to.",
+          "type": "array",
           "items": {
             "type": "string"
           }
         },
         "createdTime": {
           "type": "string",
-          "format": "date-time",
-          "description": "The date and time when the feed was created, in ISO 8601 date time format."
+          "description": "The date and time when the feed was created, in ISO 8601 date time format.",
+          "format": "date-time"
         },
         "processingStatus": {
-          "type": "string",
           "description": "The processing status of the feed.",
+          "type": "string",
           "enum": [
             "CANCELLED",
             "DONE",
@@ -1458,18 +1438,18 @@
           ]
         },
         "processingStartTime": {
+          "description": "The date and time when feed processing started, in ISO 8601 date time format.",
           "type": "string",
-          "format": "date-time",
-          "description": "The date and time when feed processing started, in ISO 8601 date time format."
+          "format": "date-time"
         },
         "processingEndTime": {
+          "description": "The date and time when feed processing completed, in ISO 8601 date time format.",
           "type": "string",
-          "format": "date-time",
-          "description": "The date and time when feed processing completed, in ISO 8601 date time format."
+          "format": "date-time"
         },
         "resultFeedDocumentId": {
-          "type": "string",
-          "description": "The identifier for the feed document. This identifier is unique only in combination with a seller ID."
+          "description": "The identifier for the feed document. This identifier is unique only in combination with a seller ID.",
+          "type": "string"
         }
       }
     },
@@ -1481,86 +1461,39 @@
     },
     "GetFeedsResponse": {
       "type": "object",
+      "required": [
+        "feeds"
+      ],
       "properties": {
-        "payload": {
+        "feeds": {
+          "description": "The feeds.",
           "$ref": "#/definitions/FeedList"
         },
         "nextToken": {
-          "type": "string",
-          "description": "Returned when the number of results exceeds pageSize. To get the next page of results, call the getFeeds operation with this token as the only parameter."
-        },
-        "errors": {
-          "$ref": "#/definitions/ErrorList"
+          "description": "Returned when the number of results exceeds pageSize. To get the next page of results, call the getFeeds operation with this token as the only parameter.",
+          "type": "string"
         }
       },
       "description": "Response schema."
-    },
-    "GetFeedResponse": {
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/Feed"
-        },
-        "errors": {
-          "$ref": "#/definitions/ErrorList"
-        }
-      },
-      "description": "Response schema."
-    },
-    "FeedDocumentEncryptionDetails": {
-      "type": "object",
-      "required": [
-        "initializationVector",
-        "key",
-        "standard"
-      ],
-      "properties": {
-        "standard": {
-          "type": "string",
-          "description": "The encryption standard required to encrypt or decrypt the document contents.",
-          "enum": [
-            "AES"
-          ],
-          "x-docgen-enum-table-extension": [
-            {
-              "value": "AES",
-              "description": "The Advanced Encryption Standard (AES)."
-            }
-          ]
-        },
-        "initializationVector": {
-          "type": "string",
-          "description": "The vector to encrypt or decrypt the document contents using Cipher Block Chaining (CBC)."
-        },
-        "key": {
-          "type": "string",
-          "description": "The encryption key used to encrypt or decrypt the document contents."
-        }
-      },
-      "description": "Encryption details for required client-side encryption and decryption of document contents."
     },
     "FeedDocument": {
       "type": "object",
       "required": [
-        "encryptionDetails",
         "feedDocumentId",
         "url"
       ],
       "properties": {
         "feedDocumentId": {
-          "type": "string",
-          "description": "The identifier for the feed document. This identifier is unique only in combination with a seller ID."
+          "description": "The identifier for the feed document. This identifier is unique only in combination with a seller ID.",
+          "type": "string"
         },
         "url": {
-          "type": "string",
-          "description": "A presigned URL for the feed document. This URL expires after 5 minutes."
-        },
-        "encryptionDetails": {
-          "$ref": "#/definitions/FeedDocumentEncryptionDetails"
+          "description": "A presigned URL for the feed document. This URL expires after 5 minutes.",
+          "type": "string"
         },
         "compressionAlgorithm": {
-          "type": "string",
           "description": "If present, the feed document contents are compressed using the indicated algorithm.",
+          "type": "string",
           "enum": [
             "GZIP"
           ],
@@ -1573,33 +1506,9 @@
         }
       }
     },
-    "GetFeedDocumentResponse": {
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/FeedDocument"
-        },
-        "errors": {
-          "$ref": "#/definitions/ErrorList"
-        }
-      },
-      "description": "Response schema."
-    },
-    "CreateFeedResponse": {
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/CreateFeedResult"
-        },
-        "errors": {
-          "$ref": "#/definitions/ErrorList"
-        }
-      },
-      "description": "Response schema."
-    },
     "FeedOptions": {
-      "type": "object",
       "description": "Additional options to control the feed. These vary by feed type.",
+      "type": "object",
       "additionalProperties": {
         "type": "string"
       }
@@ -1607,27 +1516,27 @@
     "CreateFeedSpecification": {
       "type": "object",
       "required": [
-        "feedType",
         "inputFeedDocumentId",
+        "feedType",
         "marketplaceIds"
       ],
       "properties": {
         "feedType": {
-          "type": "string",
-          "description": "The feed type."
+          "description": "The feed type.",
+          "type": "string"
         },
         "marketplaceIds": {
-          "type": "array",
           "description": "A list of identifiers for marketplaces that you want the feed to be applied to.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 25,
           "items": {
             "type": "string"
-          },
-          "maxItems": 25,
-          "minItems": 1
+          }
         },
         "inputFeedDocumentId": {
-          "type": "string",
-          "description": "The document identifier returned by the createFeedDocument operation. Encrypt and upload the feed document contents before calling the createFeed operation."
+          "description": "The document identifier returned by the createFeedDocument operation. Upload the feed document contents before calling the createFeed operation.",
+          "type": "string"
         },
         "feedOptions": {
           "$ref": "#/definitions/FeedOptions"
@@ -1641,44 +1550,28 @@
       ],
       "properties": {
         "contentType": {
-          "type": "string",
-          "description": "The content type of the feed."
+          "description": "The content type of the feed.",
+          "type": "string"
         }
       }
     },
     "CreateFeedDocumentResponse": {
-      "type": "object",
-      "properties": {
-        "payload": {
-          "$ref": "#/definitions/CreateFeedDocumentResult"
-        },
-        "errors": {
-          "$ref": "#/definitions/ErrorList"
-        }
-      },
-      "description": "The response for the createFeedDocument operation."
-    },
-    "CreateFeedDocumentResult": {
+      "description": "Information required to upload a feed document's contents.",
       "type": "object",
       "required": [
-        "encryptionDetails",
         "feedDocumentId",
         "url"
       ],
       "properties": {
         "feedDocumentId": {
-          "type": "string",
-          "description": "The identifier of the feed document."
+          "description": "The identifier of the feed document.",
+          "type": "string"
         },
         "url": {
-          "type": "string",
-          "description": "The presigned URL for uploading the feed contents. This URL expires after 5 minutes."
-        },
-        "encryptionDetails": {
-          "$ref": "#/definitions/FeedDocumentEncryptionDetails"
+          "description": "The presigned URL for uploading the feed contents. This URL expires after 5 minutes.",
+          "type": "string"
         }
-      },
-      "description": "Information required to encrypt and upload a feed document's contents."
+      }
     }
   }
 }
