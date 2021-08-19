@@ -22,3 +22,8 @@
 
 所以, 最终 java 版本的 sdk 使用 [amazon-sp-api](https://github.com/penghaiping/amazon-sp-api) 然后推送到自己的 Github 的 maven
 仓储中.
+
+# Swagger Codegen
+1. 可以使用 java -jar swagger-codegen-cli.jar config-help -l java 来检查 java 语言生成代码支持哪一些 library
+
+使用 retrofit2 为了避免默认与常见的 jackson 出现冲突

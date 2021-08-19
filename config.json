@@ -1,0 +1,9 @@
+{
+  "groupId": "com.amazon",
+  "artifactId": "spapi",
+  "artifactVersion": "1.1.0",
+  "invokerPackage": "com.amazon.spapi.client",
+  "apiPackage": "com.amazon.spapi.api",
+  "useGzipFeature": true,
+  "library": "okhttp-gson"
+}
