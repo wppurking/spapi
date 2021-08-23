@@ -22,7 +22,9 @@ This project is licensed under the Apache-2.0 License.
 
 
 使用:
+* 更新 <root>/build.gradle 中的库版本
 * ruby generate.rb
 * 将代码 cp 到对应目录, 例如: cp -r codegen/* /Users/wyatt/Programer/gitlab/amazon-sp-api/
 * 需要将  messaging/Schema 与 solicitations/Schema 中的 @Schema 与 Schema 区分开. 手动修改 @Schema 变为 @io.swagger.v3.oas.annotations.media.Schema
-* 最后在 <xxx>/amazon-sp-api/ 生成 jar 包, ./gradlew jar
+* 最后在 <xxx>/amazon-sp-api/ 生成 jar 与 sourcedoe, ./gradlew  publishToMavenLocal
+* 将 ~/.m2/repository/com/amazon/spapi 的对应版本的文件, 上传到对应位置

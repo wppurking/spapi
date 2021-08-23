@@ -43,3 +43,21 @@ dependencies {
 java {
     withSourcesJar()
 }
+
+// https://docs.gradle.org/current/userguide/publishing_maven.html
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'spapi'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+}
